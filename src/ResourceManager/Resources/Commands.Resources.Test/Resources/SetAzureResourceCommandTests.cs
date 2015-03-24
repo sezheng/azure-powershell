@@ -71,7 +71,6 @@ namespace Microsoft.Azure.Commands.Resources.Test
             UpdatePSResourceParameters expectedParameters = new UpdatePSResourceParameters()
             {
                 Name = resourceName,
-                Id = resourceParentName,
                 ResourceType = resourceType,
                 ResourceGroupName = resourceGroupName,
                 PropertyObject = properties.ToHashtable()

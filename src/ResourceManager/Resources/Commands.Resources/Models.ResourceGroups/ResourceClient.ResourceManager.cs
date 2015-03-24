@@ -130,37 +130,33 @@ namespace Microsoft.Azure.Commands.Resources.Models
 
             if(!String.IsNullOrEmpty(parameters.Id))
                 parameters.ResourceGroupName = ResourceIdentifier.GetResourceGroupName(parameters.Id);
-
-            if (!String.IsNullOrEmpty(parameters.ResourceGroupName))
+            
+            try
             {
-                try
-                {
-                    getResource = ResourceManagementClient.Resources.Get(parameters.ResourceGroupName,
-                                                                         resourceIdentity);
-                }
-                catch (CloudException e)
-                {
-                    throw new CloudException(e.ToString());
-                }
-
-                string newProperty = SerializeHashtable(parameters.PropertyObject,
-                                                  addValueLayer: false);
-
-                Dictionary<string, string> tagDictionary = TagsConversionHelper.CreateTagDictionary(parameters.Tag, validate: true);
-
-                ResourceManagementClient.Resources.CreateOrUpdate(parameters.ResourceGroupName, resourceIdentity,
-                            new BasicResource
-                            {
-                                Location = getResource.Resource.Location,
-                                Properties = newProperty,
-                                Tags = tagDictionary
-                            });
-
-                ResourceGetResult getResult = ResourceManagementClient.Resources.Get(parameters.ResourceGroupName, resourceIdentity);
-
-                return getResult.Resource.ToPSResource(this, false);
+                getResource = ResourceManagementClient.Resources.Get(parameters.ResourceGroupName,
+                                                                        resourceIdentity);
             }
-            return null;
+            catch (CloudException e)
+            {
+                throw new CloudException(e.ToString());
+            }
+
+            string newProperty = SerializeHashtable(parameters.PropertyObject,
+                                                addValueLayer: false);
+
+            Dictionary<string, string> tagDictionary = TagsConversionHelper.CreateTagDictionary(parameters.Tag, validate: true);
+
+            ResourceManagementClient.Resources.CreateOrUpdate(parameters.ResourceGroupName, resourceIdentity,
+                        new BasicResource
+                        {
+                            Location = getResource.Resource.Location,
+                            Properties = newProperty,
+                            Tags = tagDictionary
+                        });
+
+            ResourceGetResult getResult = ResourceManagementClient.Resources.Get(parameters.ResourceGroupName, resourceIdentity);
+
+            return getResult.Resource.ToPSResource(this, false);
         }
 
         /// <summary>
@@ -184,7 +180,6 @@ namespace Microsoft.Azure.Commands.Resources.Models
                 {
                     throw new CloudException(e.ToString());
                 }
-
                 resources.Add(getResult.Resource.ToPSResource(this, false));
             }
 
@@ -200,7 +195,6 @@ namespace Microsoft.Azure.Commands.Resources.Models
                 {
                     throw new CloudException(e.ToString());
                 }
-
                 resources.Add(getResult.Resource.ToPSResource(this, false));
             }
             else

@@ -27,6 +27,8 @@ namespace Microsoft.Azure.Commands.Resources.Models
 
         public string ResourceType { get; set; }
 
+        [Obsolete("This parameter is obsolete. Please use Id instead.")]
+        public string ParentResource { get; set; }
         public string Id { get; set; }
 
         public string ApiVersion { get; set; }

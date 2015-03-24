@@ -57,7 +57,6 @@ namespace Microsoft.Azure.Commands.Resources.Test
                 Name = resourceName,
                 ResourceType = resourceType,
                 ResourceGroupName = resourceGroupName,
-                Id = resourceParentName,
             };
 
             commandRuntimeMock.Setup(f => f.ShouldProcess(It.IsAny<string>(), It.IsAny<string>())).Returns(true);

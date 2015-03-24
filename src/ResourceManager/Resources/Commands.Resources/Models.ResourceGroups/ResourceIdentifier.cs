@@ -28,7 +28,9 @@ namespace Microsoft.Azure.Commands.Resources.Models
         public string ResourceGroupName { get; set; }
 
         public string ResourceName { get; set; }
-        
+
+        [Obsolete("This property is obsolete. Please use Id instead.")]
+        public string ParentResource { get; set; }
         public string Id { get; set; }
 
         public string Subscription { get; set; }
@@ -66,7 +68,6 @@ namespace Microsoft.Azure.Commands.Resources.Models
 
                 if (parentResourceBuilder.Count > 0)
                 {
-                   //ParentResource = string.Join("/", parentResourceBuilder);
                     ResourceName = string.Join("/", parentResourceBuilder);
                 }
                 if (resourceTypeBuilder.Count > 0)
@@ -90,7 +91,7 @@ namespace Microsoft.Azure.Commands.Resources.Models
                 string[] tokens = id.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
                 if (tokens.Length < 8)
                 {
-                    throw new ArgumentException(ProjectResources.InvalidFormatOfResourceId, "idFromServer");
+                    throw new ArgumentException(ProjectResources.InvalidFormatOfResourceId, "id");
                 }
                 List<string> parentResourceBuilder = new List<string>();
                 for (int i = 6; i <= tokens.Length - 3; i++)
@@ -116,7 +117,7 @@ namespace Microsoft.Azure.Commands.Resources.Models
             string[] tokens = id.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
             if (tokens.Length < 8)
             {
-                throw new ArgumentException(ProjectResources.InvalidFormatOfResourceId, "idFromServer");
+                throw new ArgumentException(ProjectResources.InvalidFormatOfResourceId, "id");
             }
             return tokens[3];
         }

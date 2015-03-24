@@ -19,8 +19,8 @@ namespace Microsoft.Azure.Commands.Resources
 {
     public abstract class ResourceBaseCmdlet : ResourcesBaseCmdlet
     {
-        internal const string ParameterSetNameWithTypeAndName = "Single resource by type and name";
-        internal const string ParameterSetNameWithId = "Single resource by Id";
+        internal const string ParameterSetNameWithTypeAndName = "Single resource identified by type and name";
+        internal const string ParameterSetNameWithId = "Single resource identified by Id";
 
         [Alias("ResourceName")]
         [Parameter(ParameterSetName = ParameterSetNameWithTypeAndName,Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "The resource name.")]
