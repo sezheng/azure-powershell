@@ -138,9 +138,9 @@ namespace Microsoft.Azure.Commands.Resources.Models
                     getResource = ResourceManagementClient.Resources.Get(parameters.ResourceGroupName,
                                                                          resourceIdentity);
                 }
-                catch (CloudException)
+                catch (CloudException e)
                 {
-                    throw new ArgumentException(ProjectResources.ResourceDoesntExists);
+                    throw new CloudException(e.ToString());
                 }
 
                 string newProperty = SerializeHashtable(parameters.PropertyObject,
@@ -182,7 +182,7 @@ namespace Microsoft.Azure.Commands.Resources.Models
                 }
                 catch (CloudException e)
                 {
-                    throw new ArgumentException(e.ToString());
+                    throw new CloudException(e.ToString());
                 }
 
                 resources.Add(getResult.Resource.ToPSResource(this, false));
@@ -198,7 +198,7 @@ namespace Microsoft.Azure.Commands.Resources.Models
                 }
                 catch (CloudException e)
                 {
-                    throw new ArgumentException(e.ToString());
+                    throw new CloudException(e.ToString());
                 }
 
                 resources.Add(getResult.Resource.ToPSResource(this, false));
