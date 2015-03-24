@@ -12,6 +12,7 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
+using System;
 using Microsoft.Azure.Commands.Resources.Models;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,19 +27,20 @@ namespace Microsoft.Azure.Commands.Resources
     public class GetAzureResourceCommand : ResourcesBaseCmdlet
     {
         internal const string BaseParameterSetName = "List resources";
-        internal const string ParameterSetNameWithId = "Get a single resource";
+        internal const string ParameterSetNameWithTypeAndName = "Get a single resource by type and name";
+        internal const string ParameterSetNameWithId = "Get a single resource by Id";
 
         [Alias("ResourceName")]
-        [Parameter(ParameterSetName = ParameterSetNameWithId, Position = 0, Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "The resource name.")]
+        [Parameter(ParameterSetName = ParameterSetNameWithTypeAndName, Position = 0, Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "The resource name.")]
         [ValidateNotNullOrEmpty]
         public string Name { get; set; }
 
-        [Parameter(ParameterSetName = ParameterSetNameWithId, Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "The resource group name.")]
+        [Parameter(ParameterSetName = ParameterSetNameWithTypeAndName, Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "The resource group name.")]
         [Parameter(ParameterSetName = BaseParameterSetName, Mandatory = false, ValueFromPipelineByPropertyName = true, HelpMessage = "The resource group name.")]
         [ValidateNotNullOrEmpty]
         public string ResourceGroupName { get; set; }
 
-        [Parameter(ParameterSetName = ParameterSetNameWithId, Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "The resource type. In the format ResourceProvider/type.")]
+        [Parameter(ParameterSetName = ParameterSetNameWithTypeAndName, Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "The resource type. In the format ResourceProvider/type.")]
         [Parameter(ParameterSetName = BaseParameterSetName, Mandatory = false, ValueFromPipelineByPropertyName = true, HelpMessage = "The resource type. In the format ResourceProvider/type.")]
         [ValidateNotNullOrEmpty]
         public string ResourceType { get; set; }
@@ -46,9 +48,15 @@ namespace Microsoft.Azure.Commands.Resources
         [Parameter(ParameterSetName = BaseParameterSetName, Mandatory = false, ValueFromPipelineByPropertyName = true, HelpMessage = "The resource tags.")]
         public Hashtable Tag { get; set; }
 
+        [Alias("ResourceId")]
+        [Parameter(ParameterSetName = ParameterSetNameWithId, Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "The full qualified Id of the resource, in the format of subscriptionId/{subscriptionId}/resourceGroups/{resourceGroup}/{resourceType}/{resourceName}")]
+        public string Id { get; set; }
+
+        [Obsolete("This parameter is obsolete. Please use Id instead.")]
         [Parameter(ParameterSetName = ParameterSetNameWithId, Mandatory = false, ValueFromPipelineByPropertyName = true, HelpMessage = "The name of the parent resource if needed. In the format of greatgrandpa/grandpa/dad.")]
         public string ParentResource { get; set; }
 
+        [Parameter(ParameterSetName = ParameterSetNameWithTypeAndName, Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "Version of the resource provider API.")]
         [Parameter(ParameterSetName = ParameterSetNameWithId, Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "Version of the resource provider API.")]
         [ValidateNotNullOrEmpty]
         public string ApiVersion { get; set; }
@@ -60,7 +68,7 @@ namespace Microsoft.Azure.Commands.Resources
                 Name = Name,
                 ResourceGroupName = ResourceGroupName,
                 ResourceType = ResourceType,
-                ParentResource = ParentResource,
+                Id = Id,
                 ApiVersion = ApiVersion,
                 Tag = new[] { Tag }
             };
@@ -80,7 +88,6 @@ namespace Microsoft.Azure.Commands.Resources
                         "Name", r.Name,
                         "ResourceGroupName", r.ResourceGroupName,
                         "ResourceType", r.ResourceType,
-                        "ParentResource", r.ParentResource,
                         "Location", r.Location,
                         "Permissions", r.PermissionsTable,
                         "ResourceId", r.ResourceId)));

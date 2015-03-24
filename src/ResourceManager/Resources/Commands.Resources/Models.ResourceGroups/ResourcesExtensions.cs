@@ -94,7 +94,6 @@ namespace Microsoft.Azure.Commands.Resources.Models
                 Location = resource.Location,
                 ResourceType = identifier.ResourceType,
                 ResourceGroupName = identifier.ResourceGroupName,
-                ParentResource = identifier.ParentResource,
                 Properties = JsonUtilities.DeserializeJson(resource.Properties),
                 PropertiesText = resource.Properties,
                 Tags = TagsConversionHelper.CreateTagHashtable(resource.Tags),
@@ -400,7 +399,6 @@ namespace Microsoft.Azure.Commands.Resources.Models
                 {
                     Name = string.Empty,
                     Location = string.Empty,
-                    ParentResource = string.Empty,
                     PropertiesText = string.Empty,
                     ResourceGroupName = string.Empty,
                     Properties = new Dictionary<string, string>(),

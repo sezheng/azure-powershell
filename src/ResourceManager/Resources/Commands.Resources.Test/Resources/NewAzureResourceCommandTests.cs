@@ -41,6 +41,8 @@ namespace Microsoft.Azure.Commands.Resources.Test
 
         private string resourceGroupLocation = "West US";
 
+        private string resourceId = "myResource";
+
         private Dictionary<string, object> properties;
 
         private Hashtable[] tags;
@@ -82,7 +84,6 @@ namespace Microsoft.Azure.Commands.Resources.Test
             CreatePSResourceParameters expectedParameters = new CreatePSResourceParameters()
             {
                 Name = resourceName,
-                ParentResource = resourceParentName,
                 ResourceType = resourceType,
                 ResourceGroupName = resourceGroupName,
                 PropertyObject = properties.ToHashtable(),
@@ -105,7 +106,6 @@ namespace Microsoft.Azure.Commands.Resources.Test
             cmdlet.Name = expectedParameters.Name;
             cmdlet.ResourceGroupName = expectedParameters.ResourceGroupName;
             cmdlet.ResourceType = expectedParameters.ResourceType;
-            cmdlet.ParentResource = expectedParameters.ParentResource;
             cmdlet.PropertyObject = expectedParameters.PropertyObject;
             cmdlet.Tag = expectedParameters.Tag;
 
@@ -114,7 +114,6 @@ namespace Microsoft.Azure.Commands.Resources.Test
             Assert.Equal(expectedParameters.Name, actualParameters.Name);
             Assert.Equal(expectedParameters.ResourceGroupName, actualParameters.ResourceGroupName);
             Assert.Equal(expectedParameters.ResourceType, actualParameters.ResourceType);
-            Assert.Equal(expectedParameters.ParentResource, actualParameters.ParentResource);
             Assert.Equal(expectedParameters.PropertyObject, actualParameters.PropertyObject);
             Assert.Equal(expectedParameters.Tag, actualParameters.Tag);
 

@@ -57,7 +57,7 @@ namespace Microsoft.Azure.Commands.Resources.Test
                 Name = resourceName,
                 ResourceType = resourceType,
                 ResourceGroupName = resourceGroupName,
-                ParentResource = resourceParentName,
+                Id = resourceParentName,
             };
 
             commandRuntimeMock.Setup(f => f.ShouldProcess(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
@@ -71,7 +71,6 @@ namespace Microsoft.Azure.Commands.Resources.Test
             cmdlet.Name = resourceName;
             cmdlet.ResourceType = resourceType;
             cmdlet.ResourceGroupName = resourceGroupName;
-            cmdlet.ParentResource = resourceParentName;
             cmdlet.PassThru = true;
             cmdlet.Force = true;
 
@@ -80,8 +79,7 @@ namespace Microsoft.Azure.Commands.Resources.Test
             Assert.Equal(expectedParameters.Name, actualParameters.Name);
             Assert.Equal(expectedParameters.ResourceGroupName, actualParameters.ResourceGroupName);
             Assert.Equal(expectedParameters.ResourceType, actualParameters.ResourceType);
-            Assert.Equal(expectedParameters.ParentResource, actualParameters.ParentResource);
-
+            
             commandRuntimeMock.Verify(f => f.WriteObject(true), Times.Once());
         }
     }

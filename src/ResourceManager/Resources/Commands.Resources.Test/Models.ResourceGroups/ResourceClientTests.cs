@@ -443,7 +443,7 @@ namespace Microsoft.Azure.Commands.Resources.Test.Models
             {
                 Location = "West US",
                 Name = resourceIdentity.ResourceName,
-                ParentResource = resourceIdentity.ParentResourcePath,
+                Id = resourceIdentity.ParentResourcePath,
                 PropertyObject = new Hashtable(properties),
                 ResourceGroupName = resourceGroupName,
                 ResourceType = resourceIdentity.ResourceProviderNamespace + "/" + resourceIdentity.ResourceType,
@@ -487,7 +487,7 @@ namespace Microsoft.Azure.Commands.Resources.Test.Models
             {
                 Location = "West US",
                 Name = resourceIdentity.ResourceName,
-                ParentResource = resourceIdentity.ParentResourcePath,
+                Id = resourceIdentity.ParentResourcePath,
                 PropertyObject = new Hashtable(properties),
                 ResourceGroupName = resourceGroupName,
                 ResourceType = "abc",
@@ -505,7 +505,7 @@ namespace Microsoft.Azure.Commands.Resources.Test.Models
             {
                 Location = "West US",
                 Name = resourceIdentity.ResourceName,
-                ParentResource = resourceIdentity.ParentResourcePath,
+                Id = resourceIdentity.ParentResourcePath,
                 PropertyObject = new Hashtable(properties),
                 ResourceGroupName = resourceGroupName,
                 ResourceType = resourceIdentity.ResourceProviderNamespace + "/" + resourceIdentity.ResourceType,
@@ -562,7 +562,7 @@ namespace Microsoft.Azure.Commands.Resources.Test.Models
             UpdatePSResourceParameters parameters = new UpdatePSResourceParameters()
             {
                 Name = resourceIdentity.ResourceName,
-                ParentResource = resourceIdentity.ParentResourcePath,
+                Id = resourceIdentity.ParentResourcePath,
                 PropertyObject = new Hashtable(properties),
                 ResourceGroupName = resourceGroupName,
                 ResourceType = resourceIdentity.ResourceProviderNamespace + "/" + resourceIdentity.ResourceType,
@@ -581,7 +581,7 @@ namespace Microsoft.Azure.Commands.Resources.Test.Models
             UpdatePSResourceParameters parameters = new UpdatePSResourceParameters()
             {
                 Name = resourceIdentity.ResourceName,
-                ParentResource = resourceIdentity.ParentResourcePath,
+                Id = resourceIdentity.ParentResourcePath,
                 PropertyObject = new Hashtable(properties),
                 ResourceGroupName = resourceGroupName,
                 ResourceType = "abc",
@@ -597,7 +597,7 @@ namespace Microsoft.Azure.Commands.Resources.Test.Models
             UpdatePSResourceParameters parameters = new UpdatePSResourceParameters()
             {
                 Name = resourceIdentity.ResourceName,
-                ParentResource = resourceIdentity.ParentResourcePath,
+                Id = resourceIdentity.ParentResourcePath,
                 PropertyObject = new Hashtable(properties),
                 ResourceGroupName = resourceGroupName,
                 ResourceType = resourceIdentity.ResourceProviderNamespace + "/" + resourceIdentity.ResourceType,
@@ -669,7 +669,7 @@ namespace Microsoft.Azure.Commands.Resources.Test.Models
             UpdatePSResourceParameters parameters = new UpdatePSResourceParameters()
             {
                 Name = resourceIdentity.ResourceName,
-                ParentResource = resourceIdentity.ParentResourcePath,
+                Id = resourceIdentity.ParentResourcePath,
                 PropertyObject = new Hashtable(patchProperties),
                 ResourceGroupName = resourceGroupName,
                 ResourceType = resourceIdentity.ResourceProviderNamespace + "/" + resourceIdentity.ResourceType
@@ -725,7 +725,7 @@ namespace Microsoft.Azure.Commands.Resources.Test.Models
             BasePSResourceParameters parameters = new BasePSResourceParameters()
             {
                 Name = resourceIdentity.ResourceName,
-                ParentResource = resourceIdentity.ParentResourcePath,
+                Id = resourceIdentity.ParentResourcePath,
                 ResourceGroupName = resourceGroupName,
                 ResourceType = resourceIdentity.ResourceProviderNamespace + "/" + resourceIdentity.ResourceType,
             };
@@ -747,7 +747,7 @@ namespace Microsoft.Azure.Commands.Resources.Test.Models
             BasePSResourceParameters parameters = new BasePSResourceParameters()
             {
                 Name = resourceIdentity.ResourceName,
-                ParentResource = resourceIdentity.ParentResourcePath,
+                Id = resourceIdentity.ParentResourcePath,
                 ResourceGroupName = resourceGroupName,
                 ResourceType = "abc",
             };
@@ -762,7 +762,7 @@ namespace Microsoft.Azure.Commands.Resources.Test.Models
             BasePSResourceParameters parameters = new BasePSResourceParameters()
             {
                 Name = resourceIdentity.ResourceName,
-                ParentResource = resourceIdentity.ParentResourcePath,
+                Id = resourceIdentity.ParentResourcePath,
                 ResourceGroupName = resourceGroupName,
                 ResourceType = resourceIdentity.ResourceProviderNamespace + "/" + resourceIdentity.ResourceType,
             };
@@ -791,7 +791,7 @@ namespace Microsoft.Azure.Commands.Resources.Test.Models
             BasePSResourceParameters parameters = new BasePSResourceParameters()
             {
                 Name = resourceIdentity.ResourceName,
-                ParentResource = resourceIdentity.ParentResourcePath,
+                Id = resourceIdentity.ParentResourcePath,
                 ResourceGroupName = resourceGroupName,
                 ResourceType = resourceIdentity.ResourceProviderNamespace + "/" + resourceIdentity.ResourceType,
             };
@@ -878,7 +878,7 @@ namespace Microsoft.Azure.Commands.Resources.Test.Models
             BasePSResourceParameters parameters = new BasePSResourceParameters()
             {
                 Name = resourceIdentity.ResourceName,
-                ParentResource = resourceIdentity.ParentResourcePath,
+                Id = resourceIdentity.ParentResourcePath,
                 ResourceGroupName = resourceGroupName,
                 ResourceType = "abc",
             };

@@ -164,7 +164,6 @@ namespace Microsoft.Azure.Commands.Resources
                 },
                 ResourceIdentifier = new ResourceIdentifier()
                 {
-                    ParentResource = ParentResource,
                     ResourceGroupName = ResourceGroupName,
                     ResourceName = ResourceName,
                     ResourceType = ResourceType,

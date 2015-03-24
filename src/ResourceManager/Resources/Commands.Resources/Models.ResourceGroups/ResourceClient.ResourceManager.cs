@@ -38,7 +38,7 @@ namespace Microsoft.Azure.Commands.Resources.Models
 
         internal static List<string> KnownLocationsNormalized = KnownLocations
             .Select(loc => loc.ToLower().Replace(" ", "")).ToList();
-
+        
         /// <summary>
         /// Creates a new resource.
         /// </summary>
@@ -46,7 +46,13 @@ namespace Microsoft.Azure.Commands.Resources.Models
         /// <returns>The created resource</returns>
         public virtual PSResource CreatePSResource(CreatePSResourceParameters parameters)
         {
-            ResourceIdentity resourceIdentity = parameters.ToResourceIdentity();
+            ResourceIdentity resourceIdentity;
+            if(!String.IsNullOrEmpty(parameters.Id))
+            {
+                resourceIdentity = new ResourceIdentifier(parameters.Id).ToResourceIdentity();
+                parameters.ResourceGroupName = ResourceIdentifier.GetResourceGroupName(parameters.Id);
+            }
+            else resourceIdentity = parameters.ToResourceIdentity();
 
             if (ResourceManagementClient.ResourceGroups.CheckExistence(parameters.ResourceGroupName).Exists)
             {
@@ -122,32 +128,39 @@ namespace Microsoft.Azure.Commands.Resources.Models
 
             ResourceGetResult getResource;
 
-            try
+            if(!String.IsNullOrEmpty(parameters.Id))
+                parameters.ResourceGroupName = ResourceIdentifier.GetResourceGroupName(parameters.Id);
+
+            if (!String.IsNullOrEmpty(parameters.ResourceGroupName))
             {
-                getResource = ResourceManagementClient.Resources.Get(parameters.ResourceGroupName,
-                                                                     resourceIdentity);
-            }
-            catch (CloudException)
-            {
-                throw new ArgumentException(ProjectResources.ResourceDoesntExists);
-            }
+                try
+                {
+                    getResource = ResourceManagementClient.Resources.Get(parameters.ResourceGroupName,
+                                                                         resourceIdentity);
+                }
+                catch (CloudException)
+                {
+                    throw new ArgumentException(ProjectResources.ResourceDoesntExists);
+                }
 
-            string newProperty = SerializeHashtable(parameters.PropertyObject,
-                                                    addValueLayer: false);
+                string newProperty = SerializeHashtable(parameters.PropertyObject,
+                                                  addValueLayer: false);
 
-            Dictionary<string, string> tagDictionary = TagsConversionHelper.CreateTagDictionary(parameters.Tag, validate: true);
+                Dictionary<string, string> tagDictionary = TagsConversionHelper.CreateTagDictionary(parameters.Tag, validate: true);
 
-            ResourceManagementClient.Resources.CreateOrUpdate(parameters.ResourceGroupName, resourceIdentity,
-                        new BasicResource
+                ResourceManagementClient.Resources.CreateOrUpdate(parameters.ResourceGroupName, resourceIdentity,
+                            new BasicResource
                             {
                                 Location = getResource.Resource.Location,
                                 Properties = newProperty,
                                 Tags = tagDictionary
                             });
 
-            ResourceGetResult getResult = ResourceManagementClient.Resources.Get(parameters.ResourceGroupName, resourceIdentity);
+                ResourceGetResult getResult = ResourceManagementClient.Resources.Get(parameters.ResourceGroupName, resourceIdentity);
 
-            return getResult.Resource.ToPSResource(this, false);
+                return getResult.Resource.ToPSResource(this, false);
+            }
+            return null;
         }
 
         /// <summary>
@@ -158,20 +171,34 @@ namespace Microsoft.Azure.Commands.Resources.Models
         public virtual List<PSResource> FilterPSResources(BasePSResourceParameters parameters)
         {
             List<PSResource> resources = new List<PSResource>();
+            ResourceGetResult getResult;
 
-            if (!string.IsNullOrEmpty(parameters.Name))
+            if(!string.IsNullOrEmpty(parameters.Id))
+            {
+                try
+                {
+                    string resourceGroupName = ResourceIdentifier.GetResourceGroupName(parameters.Id);
+                    getResult = ResourceManagementClient.Resources.Get(resourceGroupName, new ResourceIdentifier(parameters.Id).ToResourceIdentity(parameters.ApiVersion));
+                }
+                catch (CloudException e)
+                {
+                    throw new ArgumentException(e.ToString());
+                }
+
+                resources.Add(getResult.Resource.ToPSResource(this, false));
+            }
+
+            else if (!string.IsNullOrEmpty(parameters.Name))
             {
                 ResourceIdentity resourceIdentity = parameters.ToResourceIdentity();
-
-                ResourceGetResult getResult;
 
                 try
                 {
                     getResult = ResourceManagementClient.Resources.Get(parameters.ResourceGroupName, resourceIdentity);
                 }
-                catch (CloudException)
+                catch (CloudException e)
                 {
-                    throw new ArgumentException(ProjectResources.ResourceDoesntExists);
+                    throw new ArgumentException(e.ToString());
                 }
 
                 resources.Add(getResult.Resource.ToPSResource(this, false));
@@ -420,6 +447,10 @@ namespace Microsoft.Azure.Commands.Resources.Models
         {
             ResourceIdentity resourceIdentity = parameters.ToResourceIdentity();
 
+            if(!String.IsNullOrEmpty(parameters.Id))
+            {
+               parameters.ResourceGroupName = ResourceIdentifier.GetResourceGroupName(parameters.Id);
+            }
             if (!ResourceManagementClient.Resources.CheckExistence(parameters.ResourceGroupName, resourceIdentity).Exists)
             {
                 throw new ArgumentException(ProjectResources.ResourceDoesntExists);

@@ -19,20 +19,24 @@ namespace Microsoft.Azure.Commands.Resources
 {
     public abstract class ResourceBaseCmdlet : ResourcesBaseCmdlet
     {
+        internal const string ParameterSetNameWithTypeAndName = "Single resource by type and name";
+        internal const string ParameterSetNameWithId = "Single resource by Id";
+
         [Alias("ResourceName")]
-        [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "The resource name.")]
+        [Parameter(ParameterSetName = ParameterSetNameWithTypeAndName,Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "The resource name.")]
         [ValidateNotNullOrEmpty]
         public string Name { get; set; }
 
-        [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "The resource group name.")]
+        [Parameter(ParameterSetName = ParameterSetNameWithTypeAndName,Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "The resource group name.")]
         [ValidateNotNullOrEmpty]
         public string ResourceGroupName { get; set; }
 
-        [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "The resource type. In the format ResourceProvider/type.")]
+        [Parameter(ParameterSetName = ParameterSetNameWithTypeAndName,Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "The resource type. In the format ResourceProvider/type.")]
         [ValidateNotNullOrEmpty]
         public string ResourceType { get; set; }
 
-        [Parameter(Mandatory = false, ValueFromPipelineByPropertyName = true, HelpMessage = "The name of the parent resource if needed. In the format of greatgranda/grandpa/dad.")]
-        public string ParentResource { get; set; }
+        [Parameter(ParameterSetName = ParameterSetNameWithId, Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "The resource Id.")]
+        [ValidateNotNullOrEmpty]
+        public string Id { get; set; }
     }
 }

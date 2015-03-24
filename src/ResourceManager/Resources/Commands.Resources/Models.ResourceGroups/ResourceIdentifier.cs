@@ -28,8 +28,8 @@ namespace Microsoft.Azure.Commands.Resources.Models
         public string ResourceGroupName { get; set; }
 
         public string ResourceName { get; set; }
-
-        public string ParentResource { get; set; }
+        
+        public string Id { get; set; }
 
         public string Subscription { get; set; }
 
@@ -39,6 +39,7 @@ namespace Microsoft.Azure.Commands.Resources.Models
         {
             if (!string.IsNullOrEmpty(idFromServer))
             {
+                Id = idFromServer;
                 string[] tokens = idFromServer.Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries);
                 if (tokens.Length < 8)
                 {
@@ -65,13 +66,59 @@ namespace Microsoft.Azure.Commands.Resources.Models
 
                 if (parentResourceBuilder.Count > 0)
                 {
-                    ParentResource = string.Join("/", parentResourceBuilder);
+                   //ParentResource = string.Join("/", parentResourceBuilder);
+                    ResourceName = string.Join("/", parentResourceBuilder);
                 }
                 if (resourceTypeBuilder.Count > 0)
                 {
                     ResourceType = string.Join("/", resourceTypeBuilder);
                 }
             }
+        }
+
+        public static string GetParentResource(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return null;
+            }
+
+            else
+            {
+                string parentResource = string.Empty;
+            
+                string[] tokens = id.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                if (tokens.Length < 8)
+                {
+                    throw new ArgumentException(ProjectResources.InvalidFormatOfResourceId, "idFromServer");
+                }
+                List<string> parentResourceBuilder = new List<string>();
+                for (int i = 6; i <= tokens.Length - 3; i++)
+                {
+                    parentResourceBuilder.Add(tokens[i]);
+                }
+
+                if (parentResourceBuilder.Count > 0)
+                {
+                    parentResource = string.Join("/", parentResourceBuilder);
+                }
+                return (parentResource==String.Empty)?null:parentResource;
+            }
+        }
+
+        public static string GetResourceGroupName(string id)
+        {
+            if (id == null)
+            {
+                return null;
+            }
+
+            string[] tokens = id.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            if (tokens.Length < 8)
+            {
+                throw new ArgumentException(ProjectResources.InvalidFormatOfResourceId, "idFromServer");
+            }
+            return tokens[3];
         }
 
         public static string GetProviderFromResourceType(string resourceType)
@@ -112,18 +159,27 @@ namespace Microsoft.Azure.Commands.Resources.Models
 
         public override string ToString()
         {
-            string provider = GetProviderFromResourceType(ResourceType);
-            string type = GetTypeFromResourceType(ResourceType);
-            string parentAndType = string.IsNullOrEmpty(ParentResource) ? type : ParentResource + "/" + type;
             StringBuilder resourceId = new StringBuilder();
+            if (!string.IsNullOrEmpty(Id))
+            {
+                return Id;
+            }
 
-            AppendIfNotNull(ref resourceId, "/subscriptions/{0}", Subscription);
-            AppendIfNotNull(ref resourceId, "/resourceGroups/{0}", ResourceGroupName);
-            AppendIfNotNull(ref resourceId, "/providers/{0}", provider);
-            AppendIfNotNull(ref resourceId, "/{0}", parentAndType);
-            AppendIfNotNull(ref resourceId, "/{0}", ResourceName);
-
-            return resourceId.ToString();
+            else
+            {
+                string provider = GetProviderFromResourceType(ResourceType);
+                string type = GetTypeFromResourceType(ResourceType);
+                string parentResource = GetParentResource(Id);
+                string parentAndType = string.IsNullOrEmpty(parentResource) ? type : parentResource + "/" + type;
+                
+                AppendIfNotNull(ref resourceId, "/subscriptions/{0}", Subscription);
+                AppendIfNotNull(ref resourceId, "/resourceGroups/{0}", ResourceGroupName);
+                AppendIfNotNull(ref resourceId, "/providers/{0}", provider);
+                AppendIfNotNull(ref resourceId, "/{0}", parentAndType);
+                AppendIfNotNull(ref resourceId, "/{0}", ResourceName);
+                return resourceId.ToString();
+            }
+           
         }
 
         public AuthorizationResourceIdentity ToResourceIdentity()
@@ -135,7 +191,7 @@ namespace Microsoft.Azure.Commands.Resources.Models
                 identity = new AuthorizationResourceIdentity
                 {
                     ResourceName = ResourceName,
-                    ParentResourcePath = ParentResource,
+                    ParentResourcePath = GetParentResource(Id),
                     ResourceProviderNamespace = ResourceIdentifier.GetProviderFromResourceType(ResourceType),
                     ResourceType = ResourceIdentifier.GetTypeFromResourceType(ResourceType)
                 };
@@ -158,7 +214,7 @@ namespace Microsoft.Azure.Commands.Resources.Models
             ResourcesResourceIdentity identity = new ResourcesResourceIdentity
             {
                 ResourceName = ResourceName,
-                ParentResourcePath = ParentResource,
+                ParentResourcePath = GetParentResource(Id),
                 ResourceProviderNamespace = ResourceIdentifier.GetProviderFromResourceType(ResourceType),
                 ResourceType = ResourceIdentifier.GetTypeFromResourceType(ResourceType),
                 ResourceProviderApiVersion = apiVersion
@@ -166,7 +222,7 @@ namespace Microsoft.Azure.Commands.Resources.Models
 
             return identity;
         }
-
+        
         private void AppendIfNotNull(ref StringBuilder resourceId, string format, string value)
         {
             if (!string.IsNullOrEmpty(value))
