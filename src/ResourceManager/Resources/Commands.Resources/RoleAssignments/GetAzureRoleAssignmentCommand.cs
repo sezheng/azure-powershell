@@ -33,6 +33,8 @@ namespace Microsoft.Azure.Commands.Resources
             HelpMessage = "The user or group object id.")]
         [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.ResourceWithObjectId,
             HelpMessage = "The user or group object id.")]
+        [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.ResourceIdWithObjectId,
+            HelpMessage = "The user or group object id.")]
         [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.ScopeWithObjectId,
             HelpMessage = "The user or group object id.")]
         [ValidateNotNullOrEmpty]
@@ -45,6 +47,8 @@ namespace Microsoft.Azure.Commands.Resources
             HelpMessage = "The user email address.")]
         [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.ResourceWithMail,
             HelpMessage = "The user email address.")]
+        [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.ResourceIdWithMail,
+            HelpMessage = "The user email address.")]
         [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.ScopeWithMail,
             HelpMessage = "The user email address.")]
         [ValidateNotNullOrEmpty]
@@ -53,6 +57,8 @@ namespace Microsoft.Azure.Commands.Resources
         [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.ResourceGroupWithUPN,
             HelpMessage = "The user UPN.")]
         [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.ResourceWithUPN,
+            HelpMessage = "The user UPN.")]
+        [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.ResourceIdWithUPN,
             HelpMessage = "The user UPN.")]
         [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.ScopeWithUPN,
             HelpMessage = "The user UPN.")]
@@ -66,6 +72,8 @@ namespace Microsoft.Azure.Commands.Resources
             HelpMessage = "The app SPN.")]
         [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.ResourceWithSPN,
             HelpMessage = "The app SPN.")]
+        [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.ResourceIdWithSPN,
+           HelpMessage = "The app SPN.")]
         [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.ScopeWithSPN,
             HelpMessage = "The app SPN.")]
         [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.SPN,
@@ -123,6 +131,7 @@ namespace Microsoft.Azure.Commands.Resources
         [ValidateNotNullOrEmpty]
         public string ResourceType { get; set; }
 
+        [Obsolete ("This parameter is obsolete. Please try ResourceId instead.")]
         [Parameter(Mandatory = false, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.Resource,
             HelpMessage = "Parent resource of the resource to assign the role to, if there is any.")]
         [Parameter(Mandatory = false, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.ResourceWithObjectId,
@@ -135,6 +144,19 @@ namespace Microsoft.Azure.Commands.Resources
             HelpMessage = "Parent resource of the resource to assign the role to, if there is any.")]
         [ValidateNotNullOrEmpty]
         public string ParentResource { get; set; }
+        
+        [Parameter(Mandatory = false, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.ResourceWithResourceId,
+            HelpMessage = "Parent resource of the resource to assign the role to, if there is any.")]
+        [Parameter(Mandatory = false, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.ResourceIdWithMail,
+            HelpMessage = "Parent resource of the resource to assign the role to, if there is any.")]
+        [Parameter(Mandatory = false, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.ResourceIdWithUPN,
+            HelpMessage = "Parent resource of the resource to assign the role to, if there is any.")]
+        [Parameter(Mandatory = false, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.ResourceIdWithSPN,
+            HelpMessage = "Parent resource of the resource to assign the role to, if there is any.")]
+        [Parameter(Mandatory = true, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.ResourceIdWithObjectId,
+           HelpMessage = "The user or group object id.")]
+        [ValidateNotNullOrEmpty]
+        public string ResourceId { get; set; }
 
         [Parameter(Mandatory = false, ValueFromPipelineByPropertyName = true, ParameterSetName = ParameterSet.Empty,
             HelpMessage = "Role to assign the principals with.")]
@@ -207,6 +229,8 @@ namespace Microsoft.Azure.Commands.Resources
                 },
                 ResourceIdentifier = new ResourceIdentifier()
                 {
+                    
+                    Id = ResourceId,
                     ResourceGroupName = ResourceGroupName,
                     ResourceName = ResourceName,
                     ResourceType = ResourceType,
@@ -216,5 +240,6 @@ namespace Microsoft.Azure.Commands.Resources
 
             WriteObject(PoliciesClient.FilterRoleAssignments(options), true);
         }
+
     }
 }

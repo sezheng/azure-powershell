@@ -13,6 +13,7 @@
 // ----------------------------------------------------------------------------------
 
 using Microsoft.Azure.Commands.Resources.Models.Authorization;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -25,6 +26,9 @@ namespace Microsoft.Azure.Commands.Resources.Models
         public string ResourceGroupName { get; set; }
 
         public string ResourceType { get; set; }
+
+        [Obsolete("This parameter is obsolete. Please use Id instead.")]
+        public string ParentResource { get; set; }
 
         public string Location { get; set; }
 

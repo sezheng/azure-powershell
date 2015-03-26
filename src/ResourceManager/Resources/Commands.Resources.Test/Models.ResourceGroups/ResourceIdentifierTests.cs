@@ -64,7 +64,7 @@ namespace Microsoft.Azure.Commands.Resources.Test.Models
             Assert.Equal("abc123", id.Subscription);
             Assert.Equal("group1", id.ResourceGroupName);
             Assert.Equal("Microsoft.Test/db", id.ResourceType);
-            Assert.Null(ResourceIdentifier.GetParentResource(id.ToString()));
+            Assert.Null(ResourceIdentifier.GetParentResource(id.ResourceType,id.ResourceName));
             Assert.Equal("r45678db", id.ResourceName);
         }
 
@@ -76,7 +76,7 @@ namespace Microsoft.Azure.Commands.Resources.Test.Models
             Assert.Equal("abc123", id.Subscription);
             Assert.Equal("group1", id.ResourceGroupName);
             Assert.Equal("Microsoft.Test/servers/db", id.ResourceType);
-            Assert.Equal("servers/r12345sql", ResourceIdentifier.GetParentResource(id.ToString()));
+            Assert.Equal("servers/r12345sql", ResourceIdentifier.GetParentResource(id.ResourceType, id.ResourceName));
             Assert.Equal("r45678db", id.ResourceName);
         }
 
@@ -88,7 +88,7 @@ namespace Microsoft.Azure.Commands.Resources.Test.Models
             Assert.Equal("abc123", id.Subscription);
             Assert.Equal("group1", id.ResourceGroupName);
             Assert.Equal("Microsoft.Test/servers/subserver/db", id.ResourceType);
-            Assert.Equal("servers/r12345sql/subserver/r5555", ResourceIdentifier.GetParentResource(id.ToString()));
+            Assert.Equal("servers/r12345sql/subserver/r5555", ResourceIdentifier.GetParentResource(id.ResourceType, id.ResourceName));
             Assert.Equal("r45678db", id.ResourceName);
         }
 
@@ -107,14 +107,14 @@ namespace Microsoft.Azure.Commands.Resources.Test.Models
             Assert.Null(id.Subscription);
             Assert.Null(id.ResourceGroupName);
             Assert.Null(id.ResourceType);
-            Assert.Null(ResourceIdentifier.GetParentResource(id.ToString()));
+            Assert.Null(ResourceIdentifier.GetParentResource(id.ResourceType,id.ResourceName));
             Assert.Null(id.ResourceName);
 
             id = new ResourceIdentifier("");
             Assert.Null(id.Subscription);
             Assert.Null(id.ResourceGroupName);
             Assert.Null(id.ResourceType);
-            Assert.Null(ResourceIdentifier.GetParentResource(id.ToString()));
+            Assert.Null(ResourceIdentifier.GetParentResource(id.ResourceType,id.ResourceName));
             Assert.Null(id.ResourceName);
         }
     }

@@ -14,7 +14,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using System.Text;
+using Microsoft.Azure.Management.Resources.Models;
 using AuthorizationResourceIdentity = Microsoft.Azure.ResourceIdentity;
 using ProjectResources = Microsoft.Azure.Commands.Resources.Properties.Resources;
 using ResourcesResourceIdentity = Microsoft.Azure.ResourceIdentity;
@@ -49,7 +51,7 @@ namespace Microsoft.Azure.Commands.Resources.Models
                 }
                 Subscription = tokens[1];
                 ResourceGroupName = tokens[3];
-                ResourceName = tokens[tokens.Length - 1];
+                //ResourceName = tokens[tokens.Length - 1];
 
                 List<string> resourceTypeBuilder = new List<string>();
                 resourceTypeBuilder.Add(tokens[5]);
@@ -69,43 +71,49 @@ namespace Microsoft.Azure.Commands.Resources.Models
                 if (parentResourceBuilder.Count > 0)
                 {
                     ResourceName = string.Join("/", parentResourceBuilder);
+                    ResourceName = string.Join("/", tokens[tokens.Length - 1]);
+                }
+                else
+                {
+                    ResourceName = tokens[tokens.Length - 1];
                 }
                 if (resourceTypeBuilder.Count > 0)
                 {
                     ResourceType = string.Join("/", resourceTypeBuilder);
                 }
+               
             }
         }
 
-        public static string GetParentResource(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-            {
-                return null;
-            }
+        //public static string GetParentResource(string id)
+        //{
+        //    if (string.IsNullOrEmpty(id))
+        //    {
+        //        return null;
+        //    }
 
-            else
-            {
-                string parentResource = string.Empty;
+        //    else
+        //    {
+        //        string parentResource = string.Empty;
             
-                string[] tokens = id.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                if (tokens.Length < 8)
-                {
-                    throw new ArgumentException(ProjectResources.InvalidFormatOfResourceId, "id");
-                }
-                List<string> parentResourceBuilder = new List<string>();
-                for (int i = 6; i <= tokens.Length - 3; i++)
-                {
-                    parentResourceBuilder.Add(tokens[i]);
-                }
+        //        string[] tokens = id.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+        //        if (tokens.Length < 8)
+        //        {
+        //            throw new ArgumentException(ProjectResources.InvalidFormatOfResourceId, "id");
+        //        }
+        //        List<string> parentResourceBuilder = new List<string>();
+        //        for (int i = 6; i <= tokens.Length - 3; i++)
+        //        {
+        //            parentResourceBuilder.Add(tokens[i]);
+        //        }
 
-                if (parentResourceBuilder.Count > 0)
-                {
-                    parentResource = string.Join("/", parentResourceBuilder);
-                }
-                return (parentResource==String.Empty)?null:parentResource;
-            }
-        }
+        //        if (parentResourceBuilder.Count > 0)
+        //        {
+        //            parentResource = string.Join("/", parentResourceBuilder);
+        //        }
+        //        return (parentResource==String.Empty)?null:parentResource;
+        //    }
+        //}
 
         public static string GetResourceGroupName(string id)
         {
@@ -120,6 +128,42 @@ namespace Microsoft.Azure.Commands.Resources.Models
                 throw new ArgumentException(ProjectResources.InvalidFormatOfResourceId, "id");
             }
             return tokens[3];
+        }
+
+        public static string GetParentResource(string resourceType,string resourceName)
+        {
+            if (resourceType == null || resourceName ==null)
+            {
+                return null;
+            }
+
+            else            
+            {
+                string[] tokensOfResourceType = resourceType.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] tokensOfResourceName = resourceName.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+                List<string> parentResourceBuilder = new List<string>();
+                int sizeOfResourceTypeToken = tokensOfResourceType.Length;
+                int sizeOfResourceNameToken = tokensOfResourceName.Length;
+                if ((sizeOfResourceNameToken == sizeOfResourceTypeToken - 1))
+                {
+                    if ((tokensOfResourceType.Length > 2) && (tokensOfResourceName.Length > 1))
+                    {
+                        for (int index = 1; index < sizeOfResourceTypeToken - 1; index++)
+                        {
+                            parentResourceBuilder.Add(tokensOfResourceType[index]);
+                            parentResourceBuilder.Add(tokensOfResourceName[index - 1]);
+                        }
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("Resource type or resource name is incorrect!");
+                }
+
+                return (parentResourceBuilder.Count != 0) ? string.Join("/", parentResourceBuilder) : null;
+            }
+            
         }
 
         public static string GetProviderFromResourceType(string resourceType)
@@ -170,7 +214,7 @@ namespace Microsoft.Azure.Commands.Resources.Models
             {
                 string provider = GetProviderFromResourceType(ResourceType);
                 string type = GetTypeFromResourceType(ResourceType);
-                string parentResource = GetParentResource(Id);
+                string parentResource = GetParentResource(ResourceType, ResourceName);
                 string parentAndType = string.IsNullOrEmpty(parentResource) ? type : parentResource + "/" + type;
                 
                 AppendIfNotNull(ref resourceId, "/subscriptions/{0}", Subscription);
@@ -191,10 +235,10 @@ namespace Microsoft.Azure.Commands.Resources.Models
             {
                 identity = new AuthorizationResourceIdentity
                 {
-                    ResourceName = ResourceName,
-                    ParentResourcePath = GetParentResource(Id),
-                    ResourceProviderNamespace = ResourceIdentifier.GetProviderFromResourceType(ResourceType),
-                    ResourceType = ResourceIdentifier.GetTypeFromResourceType(ResourceType)
+                    ResourceName = TransferToResourceIdentityResourceName(ResourceName),
+                    ParentResourcePath = GetParentResource(ResourceType, ResourceName),
+                    ResourceProviderNamespace = GetProviderFromResourceType(ResourceType),
+                    ResourceType = GetTypeFromResourceType(ResourceType)
                 };
             }
 
@@ -214,14 +258,32 @@ namespace Microsoft.Azure.Commands.Resources.Models
 
             ResourcesResourceIdentity identity = new ResourcesResourceIdentity
             {
-                ResourceName = ResourceName,
-                ParentResourcePath = GetParentResource(Id),
-                ResourceProviderNamespace = ResourceIdentifier.GetProviderFromResourceType(ResourceType),
-                ResourceType = ResourceIdentifier.GetTypeFromResourceType(ResourceType),
+                ResourceName = TransferToResourceIdentityResourceName(ResourceName),
+                ParentResourcePath = GetParentResource(ResourceType, ResourceName),
+                ResourceProviderNamespace = GetProviderFromResourceType(ResourceType),
+                ResourceType = GetTypeFromResourceType(ResourceType),
                 ResourceProviderApiVersion = apiVersion
             };
 
             return identity;
+        }
+
+        private string TransferToResourceIdentityResourceName(string ResourceName)
+        {
+            if (ResourceName == null)
+            {
+                throw new Exception("Resource name is null, please provide resource name.");
+            }
+
+            int lastIndexOfSlash = ResourceName.LastIndexOf('/');
+            if (lastIndexOfSlash < 0)
+            {
+                return ResourceName;
+            }
+            else
+            {
+                return ResourceName.Substring(lastIndexOfSlash + 1);
+            }
         }
         
         private void AppendIfNotNull(ref StringBuilder resourceId, string format, string value)

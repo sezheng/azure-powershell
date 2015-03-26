@@ -80,7 +80,7 @@ namespace Microsoft.Azure.Commands.Resources.Models
 
             Action createOrUpdateResource = () =>
                 {
-                    WriteVerbose(string.Format("Creating resource \"{0}\" started.", parameters.Name));
+                    WriteVerbose(string.Format("Creating resource \"{0}\" in resource type \"{1}\" started.", parameters.Name, resourceIdentity.ResourceType));
 
                     Dictionary<string, string> tagDictionary = TagsConversionHelper.CreateTagDictionary(parameters.Tag, validate: true);
                     

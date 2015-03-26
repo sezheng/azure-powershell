@@ -67,5 +67,15 @@ namespace Microsoft.Azure.Commands.Resources.Models.ActiveDirectory
         public const string ApplicationWithKeyCredential = "ApplicationWithKeyCredentialParameterSet";
 
         public const string Empty = "EmptyParameterSet";
+
+        public const string ResourceIdWithMail = "ResourceIdWithMailParameterSet";
+
+        public const string ResourceIdWithSPN = "ResourceIdWithSPN";
+
+        public const string ResourceIdWithUPN = "ResourceIdWithUPN";
+
+        public const string ResourceIdWithObjectId = "ResourceIdWithObjectId";
+
+        public const string ResourceWithResourceId = "ResourceWithResourceId ";
     }
 }

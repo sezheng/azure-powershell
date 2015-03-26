@@ -41,6 +41,7 @@ namespace Microsoft.Azure.Commands.Resources
                 Name = Name,
                 ResourceGroupName = ResourceGroupName,
                 ResourceType = ResourceType,
+                
                 Id =Id,
                 ApiVersion = ApiVersion
             };
