@@ -22,7 +22,7 @@ using Microsoft.Azure.Management.Resources.Models;
 using AuthorizationResourceIdentity = Microsoft.Azure.ResourceIdentity;
 using ProjectResources = Microsoft.Azure.Commands.Resources.Properties.Resources;
 using ResourcesResourceIdentity = Microsoft.Azure.ResourceIdentity;
-using Microsoft.Azure.Commands.Resources.Models.ResourceGroups;
+//using Microsoft.Azure.Commands.Resources.Models.ResourceGroups;
 
 namespace Microsoft.Azure.Commands.Resources.Models
 {

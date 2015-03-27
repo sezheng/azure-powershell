@@ -131,28 +131,25 @@ namespace Microsoft.Azure.Commands.Resources.Models
             if(!String.IsNullOrEmpty(parameters.Id))
                 parameters.ResourceGroupName = ResourceIdentifier.GetResourceGroupName(parameters.Id);
             
-            try
-            {
-                getResource = ResourceManagementClient.Resources.Get(parameters.ResourceGroupName,
+            getResource = ResourceManagementClient.Resources.Get(parameters.ResourceGroupName,
                                                                         resourceIdentity);
-            }
-            catch (CloudException e)
+            if (getResource == null)
             {
-                throw new CloudException(e.ToString());
+                throw new Exception();
             }
 
-            string newProperty = SerializeHashtable(parameters.PropertyObject,
-                                                addValueLayer: false);
+            string newProperty = SerializeHashtable(parameters.PropertyObject,addValueLayer: false);
 
             Dictionary<string, string> tagDictionary = TagsConversionHelper.CreateTagDictionary(parameters.Tag, validate: true);
 
-            ResourceManagementClient.Resources.CreateOrUpdate(parameters.ResourceGroupName, resourceIdentity,
-                        new BasicResource
-                        {
-                            Location = getResource.Resource.Location,
-                            Properties = newProperty,
-                            Tags = tagDictionary
-                        });
+            ResourceManagementClient.Resources.CreateOrUpdate(
+                parameters.ResourceGroupName, resourceIdentity,
+                new BasicResource
+                {
+                    Location = getResource.Resource.Location,
+                    Properties = newProperty,
+                    Tags = tagDictionary
+                });
 
             ResourceGetResult getResult = ResourceManagementClient.Resources.Get(parameters.ResourceGroupName, resourceIdentity);
 
@@ -176,15 +173,16 @@ namespace Microsoft.Azure.Commands.Resources.Models
                 if (!string.IsNullOrEmpty(parameters.Id))
                     parameters.ResourceGroupName = ResourceIdentifier.GetResourceGroupName(parameters.Id);
 
-                try
+                getResult = ResourceManagementClient.Resources.Get(parameters.ResourceGroupName, resourceIdentity);
+
+                if (getResult == null)
                 {
-                    getResult = ResourceManagementClient.Resources.Get(parameters.ResourceGroupName, resourceIdentity);
+                    throw new Exception();
                 }
-                catch (CloudException e)
+                else
                 {
-                    throw new CloudException(e.ToString());
+                    resources.Add(getResult.Resource.ToPSResource(this, false));
                 }
-                resources.Add(getResult.Resource.ToPSResource(this, false));
             }
             else
             {
@@ -430,7 +428,7 @@ namespace Microsoft.Azure.Commands.Resources.Models
         {
             ResourceIdentity resourceIdentity = parameters.ToResourceIdentity();
 
-            if(!String.IsNullOrEmpty(parameters.Id))
+            if(!string.IsNullOrEmpty(parameters.Id))
             {
                parameters.ResourceGroupName = ResourceIdentifier.GetResourceGroupName(parameters.Id);
             }
