@@ -75,9 +75,9 @@
       <HintPath>..\..\..\packages\Microsoft.Azure.Management.Authorization.0.17.0-preview\lib\net40\Microsoft.Azure.Management.Authorization.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Azure.ResourceManager, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Azure.ResourceManager, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Microsoft.Azure.Management.Resources.2.12.0-preview\lib\net40\Microsoft.Azure.ResourceManager.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.Azure.Management.Resources.2.14.1-preview\lib\net40\Microsoft.Azure.ResourceManager.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory">
       <SpecificVersion>False</SpecificVersion>
@@ -98,10 +98,6 @@
     <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop, Version=1.0.168.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Commands.Common, Version=0.8.15.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Package\Debug\ServiceManagement\Azure\RemoteApp\Microsoft.WindowsAzure.Commands.Common.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Management, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -141,15 +137,8 @@
     <Compile Include="ActiveDirectory\NewAzureADApplicationCommand.cs" />
     <Compile Include="ActiveDirectory\RemoveAzureADServicePrincipalCommand.cs" />
     <Compile Include="ActiveDirectory\NewAzureADServicePrincipalCommand.cs" />
-    <Compile Include="ManagementLocks\AzureManagementLockCmdletsBase.cs" />
-    <Compile Include="ManagementLocks\GetAzureManagementLockCommand.cs" />
-    <Compile Include="ManagementLocks\NewAzureManagementLockCommand.cs" />
-    <Compile Include="ManagementLocks\RemoveAzureManagementLockCommand.cs" />
-    <Compile Include="Models.ManagementLocks\BasePSManagementLockParameters.cs" />
-    <Compile Include="Models.ManagementLocks\ManagementLockResponseExtensions.cs" />
-    <Compile Include="Models.ManagementLocks\ManagementLockAuthorizationClient.cs" />
-    <Compile Include="Models.ManagementLocks\PSManagementLock.cs" />
-    <Compile Include="Models.ResourceGroups\PSResourceProviderType.cs" />
+    <Compile Include="Models.ResourceGroups\IEmunerable.cs" />
+    <Compile Include="Models.ResourceGroups\StringExtensions.cs" />
     <Compile Include="ProviderFeatures\AzureProviderFeatureCmdletsBase.cs" />
     <Compile Include="ProviderFeatures\GetAzureProviderFeatureCmdlet.cs" />
     <Compile Include="Models.ActiveDirectory\ActiveDirectoryBaseCmdlet.cs" />

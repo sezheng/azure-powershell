@@ -46,13 +46,13 @@ namespace Microsoft.Azure.Commands.Resources.Models
         /// <returns>The created resource</returns>
         public virtual PSResource CreatePSResource(CreatePSResourceParameters parameters)
         {
-            ResourceIdentity resourceIdentity;
-            if(!String.IsNullOrEmpty(parameters.Id))
+            ResourceIdentity resourceIdentity = parameters.ToResourceIdentity();
+
+            if (!string.IsNullOrEmpty(parameters.Id))
             {
-                resourceIdentity = new ResourceIdentifier(parameters.Id).ToResourceIdentity();
                 parameters.ResourceGroupName = ResourceIdentifier.GetResourceGroupName(parameters.Id);
+                parameters.Name = StringExtensions.GetValue(parameters.Id, StringExtensions.GetTokenSize(parameters.Id) - 1);
             }
-            else resourceIdentity = parameters.ToResourceIdentity();
 
             if (ResourceManagementClient.ResourceGroups.CheckExistence(parameters.ResourceGroupName).Exists)
             {
@@ -169,23 +169,12 @@ namespace Microsoft.Azure.Commands.Resources.Models
             List<PSResource> resources = new List<PSResource>();
             ResourceGetResult getResult;
 
-            if(!string.IsNullOrEmpty(parameters.Id))
-            {
-                try
-                {
-                    string resourceGroupName = ResourceIdentifier.GetResourceGroupName(parameters.Id);
-                    getResult = ResourceManagementClient.Resources.Get(resourceGroupName, new ResourceIdentifier(parameters.Id).ToResourceIdentity(parameters.ApiVersion));
-                }
-                catch (CloudException e)
-                {
-                    throw new CloudException(e.ToString());
-                }
-                resources.Add(getResult.Resource.ToPSResource(this, false));
-            }
-
-            else if (!string.IsNullOrEmpty(parameters.Name))
+            if(!string.IsNullOrEmpty(parameters.ResourceType) || parameters.Id!=null)
             {
                 ResourceIdentity resourceIdentity = parameters.ToResourceIdentity();
+
+                if (!string.IsNullOrEmpty(parameters.Id))
+                    parameters.ResourceGroupName = ResourceIdentifier.GetResourceGroupName(parameters.Id);
 
                 try
                 {
