@@ -67,25 +67,54 @@ namespace Microsoft.Azure.Commands.Resources.Models
             List<string> parentResourceBuilder = new List<string>();
             int sizeOfResourceTypeToken = tokensOfResourceType.Length;
             int sizeOfResourceNameToken = tokensOfResourceName.Length;
-            if ((sizeOfResourceNameToken == sizeOfResourceTypeToken - 1))
+           
+            if ((tokensOfResourceType.Length > 2) && (tokensOfResourceName.Length > 1))
             {
-                if ((tokensOfResourceType.Length > 2) && (tokensOfResourceName.Length > 1))
+                for (int index = 1; index < sizeOfResourceTypeToken - 1; index++)
                 {
-                    for (int index = 1; index < sizeOfResourceTypeToken - 1; index++)
-                    {
-                        parentResourceBuilder.Add(tokensOfResourceType[index]);
-                        parentResourceBuilder.Add(tokensOfResourceName[index - 1]);
-                    }
+                    parentResourceBuilder.Add(tokensOfResourceType[index]);
+                    parentResourceBuilder.Add(tokensOfResourceName[index - 1]);
                 }
             }
-            else
-            {
-                throw new ArgumentException("Resource type or resource name is incorrect!");
-            }
-
+           
             return (parentResourceBuilder.Count != 0) ? string.Join("/", parentResourceBuilder) : null;
         }
 
+        public static string GetProviderFromResourceType(string resourceType)
+        {
+            if (resourceType == null)
+            {
+                return null;
+            }
+
+            int indexOfSlash = resourceType.IndexOf('/');
+            if (indexOfSlash < 0)
+            {
+                return string.Empty;
+            }
+            else
+            {
+                return resourceType.Substring(0, indexOfSlash);
+            }
+        }
+
+        public static string GetTypeFromResourceType(string resourceType)
+        {
+            if (resourceType == null)
+            {
+                return null;
+            }
+
+            int lastIndexOfSlash = resourceType.LastIndexOf('/');
+            if (lastIndexOfSlash < 0)
+            {
+                return string.Empty;
+            }
+            else
+            {
+                return resourceType.Substring(lastIndexOfSlash + 1);
+            }
+        }
         public override string ToString()
         {
             StringBuilder resourceId = new StringBuilder();
@@ -96,8 +125,6 @@ namespace Microsoft.Azure.Commands.Resources.Models
 
             else
             {
-                //ResourceType: Microsoft.Web/Sites/Slot/Extension
-                //ResourceName: mysite/myslot/myextension
                 string provider = StringExtensions.GetValue(ResourceType,0);
                 string type = StringExtensions.GetValue(ResourceType, ResourceType.Length-1);
                 string parentResource = GetParentResource(ResourceType, ResourceName);
@@ -117,7 +144,19 @@ namespace Microsoft.Azure.Commands.Resources.Models
         {
             AuthorizationResourceIdentity identity = null;
 
-            if (!string.IsNullOrEmpty(ResourceType) && ResourceType.IndexOf('/') > 0)
+            // Old parameter pattern
+            if (!string.IsNullOrEmpty(ParentResource))
+            {
+                identity = new AuthorizationResourceIdentity
+                {
+                    ResourceName = ResourceName,
+                    ParentResourcePath = ParentResource,
+                    ResourceProviderNamespace = ResourceIdentifier.GetProviderFromResourceType(ResourceType),
+                    ResourceType = ResourceIdentifier.GetTypeFromResourceType(ResourceType)
+                };
+            }
+
+            else if (!string.IsNullOrEmpty(ResourceType) && ResourceType.IndexOf('/') > 0)
             {
                 int lengthOfType = StringExtensions.GetTokenSize(ResourceType);
                 int lengthOfName = StringExtensions.GetTokenSize(ResourceName);
@@ -148,7 +187,22 @@ namespace Microsoft.Azure.Commands.Resources.Models
         public ResourcesResourceIdentity ToResourceIdentity(string apiVersion)
         {
             var identity = new ResourceIdentity();
-            if (!string.IsNullOrEmpty(ResourceType) && ResourceType.IndexOf('/') > 0)
+
+            // old parameter pattern with parentResourcePath
+            if(!string.IsNullOrEmpty(ParentResource))
+            {
+                identity = new ResourcesResourceIdentity
+                {
+                    ResourceName = ResourceName,
+                    ParentResourcePath = ParentResource,
+                    ResourceProviderNamespace = ResourceIdentifier.GetProviderFromResourceType(ResourceType),
+                    ResourceType = ResourceIdentifier.GetTypeFromResourceType(ResourceType),
+                    ResourceProviderApiVersion = apiVersion
+                };
+            }
+            // 2 cases: a) old way with no parentResourcePath
+            //          b) new parameter pattern 
+            else if (!string.IsNullOrEmpty(ResourceType) && ResourceType.IndexOf('/') > 0)
             {
                 int lengthOfType = StringExtensions.GetTokenSize(ResourceType);
                 int lengthOfName = StringExtensions.GetTokenSize(ResourceName);

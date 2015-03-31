@@ -49,7 +49,7 @@ namespace Microsoft.Azure.Commands.Resources
                 Name = Name,
                 ResourceGroupName = ResourceGroupName,
                 ResourceType = ResourceType,
-                
+                ParentResource = ParentResource,
                 Id = Id,
                 Location = Location,
                 PropertyObject = PropertyObject,

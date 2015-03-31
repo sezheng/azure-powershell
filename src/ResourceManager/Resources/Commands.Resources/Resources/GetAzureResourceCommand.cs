@@ -53,7 +53,7 @@ namespace Microsoft.Azure.Commands.Resources
         public string Id { get; set; }
 
         [Obsolete("This parameter is obsolete. Please use Id instead.")]
-        [Parameter(ParameterSetName = ParameterSetNameWithId, Mandatory = false, ValueFromPipelineByPropertyName = true, HelpMessage = "The name of the parent resource if needed. In the format of greatgrandpa/grandpa/dad.")]
+        [Parameter(ParameterSetName = ParameterSetNameWithTypeAndName, Mandatory = false, ValueFromPipelineByPropertyName = true, HelpMessage = "The name of the parent resource if needed. In the format of greatgrandpa/grandpa/dad.")]
         public string ParentResource { get; set; }
 
         [Parameter(ParameterSetName = ParameterSetNameWithTypeAndName, Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "Version of the resource provider API.")]
@@ -69,6 +69,7 @@ namespace Microsoft.Azure.Commands.Resources
                 ResourceGroupName = ResourceGroupName,
                 ResourceType = ResourceType,
                 Id = Id,
+                ParentResource = ParentResource,
                 ApiVersion = ApiVersion,
                 Tag = new[] { Tag }
             };
@@ -88,6 +89,7 @@ namespace Microsoft.Azure.Commands.Resources
                         "Name", r.Name,
                         "ResourceGroupName", r.ResourceGroupName,
                         "ResourceType", r.ResourceType,
+                        "ParentResource", r.ParentResource,
                         "Location", r.Location,
                         "Permissions", r.PermissionsTable,
                         "ResourceId", r.ResourceId)));

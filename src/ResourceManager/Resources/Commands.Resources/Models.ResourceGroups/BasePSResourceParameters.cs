@@ -43,7 +43,8 @@ namespace Microsoft.Azure.Commands.Resources.Models
                 Id = Id,
                 ResourceGroupName = ResourceGroupName,
                 ResourceName = Name,
-                ResourceType = ResourceType
+                ResourceType = ResourceType,
+                ParentResource = ParentResource,
             }.ToResourceIdentity(ApiVersion);
         }
     }

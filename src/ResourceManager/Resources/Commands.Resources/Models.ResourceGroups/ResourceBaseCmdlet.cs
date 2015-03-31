@@ -12,6 +12,7 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
+using System;
 using Microsoft.Azure.Commands.Resources.Models;
 using System.Management.Automation;
 
@@ -34,6 +35,10 @@ namespace Microsoft.Azure.Commands.Resources
         [Parameter(ParameterSetName = ParameterSetNameWithTypeAndName,Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "The resource type. In the format ResourceProvider/type.")]
         [ValidateNotNullOrEmpty]
         public string ResourceType { get; set; }
+
+        [Obsolete("This parameter is obsolete.")]
+        [Parameter(Mandatory = false, ValueFromPipelineByPropertyName = true, HelpMessage = "The name of the parent resource if needed. In the format of greatgranda/grandpa/dad.")]
+        public string ParentResource { get; set; }
 
         [Parameter(ParameterSetName = ParameterSetNameWithId, Mandatory = true, ValueFromPipelineByPropertyName = true, HelpMessage = "The resource Id.")]
         [ValidateNotNullOrEmpty]

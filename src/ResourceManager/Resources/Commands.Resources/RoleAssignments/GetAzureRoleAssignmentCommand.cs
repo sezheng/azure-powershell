@@ -229,7 +229,7 @@ namespace Microsoft.Azure.Commands.Resources
                 },
                 ResourceIdentifier = new ResourceIdentifier()
                 {
-                    
+                    ParentResource = ParentResource,
                     Id = ResourceId,
                     ResourceGroupName = ResourceGroupName,
                     ResourceName = ResourceName,
