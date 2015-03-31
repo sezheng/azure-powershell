@@ -12,15 +12,15 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using System;
-using Microsoft.Azure.Commands.Resources.Models;
-using System.Collections;
-using System.Collections.Generic;
-using System.Management.Automation;
-using ProjectResources = Microsoft.Azure.Commands.Resources.Properties.Resources;
-
 namespace Microsoft.Azure.Commands.Resources
 {
+    using System;
+    using Microsoft.Azure.Commands.Resources.Models;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Management.Automation;
+    using ProjectResources = Microsoft.Azure.Commands.Resources.Properties.Resources;
+    
     /// <summary>
     /// Get an existing resource.
     /// </summary>

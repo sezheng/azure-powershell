@@ -26,6 +26,9 @@ using ResourcesResourceIdentity = Microsoft.Azure.ResourceIdentity;
 
 namespace Microsoft.Azure.Commands.Resources.Models
 {
+    /// <summary>
+    /// A class that represents the identity of a resource. 
+    /// </summary>
     public class ResourceIdentifier
     {
         public string ResourceType { get; set; }
@@ -36,6 +39,7 @@ namespace Microsoft.Azure.Commands.Resources.Models
 
         [Obsolete("This property is obsolete. Please use Id instead.")]
         public string ParentResource { get; set; }
+
         public string Id { get; set; }
 
         public string Subscription { get; set; }
@@ -59,7 +63,7 @@ namespace Microsoft.Azure.Commands.Resources.Models
             }
         }
        
-        public static string GetParentResource(string resourceType,string resourceName)
+        public static string GetParentResource(string resourceType, string resourceName)
         {
             string[] tokensOfResourceType = resourceType.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
             string[] tokensOfResourceName = resourceName.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);

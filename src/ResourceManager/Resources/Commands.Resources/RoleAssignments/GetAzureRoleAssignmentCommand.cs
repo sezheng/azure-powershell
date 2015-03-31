@@ -12,16 +12,16 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using Microsoft.Azure.Commands.Resources.Models;
-using Microsoft.Azure.Commands.Resources.Models.ActiveDirectory;
-using Microsoft.Azure.Commands.Resources.Models.Authorization;
-using System;
-using System.Collections.Generic;
-using System.Management.Automation;
-using ProjectResources = Microsoft.Azure.Commands.Resources.Properties.Resources;
-
 namespace Microsoft.Azure.Commands.Resources
 {
+    using Microsoft.Azure.Commands.Resources.Models;
+    using Microsoft.Azure.Commands.Resources.Models.ActiveDirectory;
+    using Microsoft.Azure.Commands.Resources.Models.Authorization;
+    using System;
+    using System.Collections.Generic;
+    using System.Management.Automation;
+    using ProjectResources = Microsoft.Azure.Commands.Resources.Properties.Resources;
+    
     /// <summary>
     /// Filters role assignments
     /// </summary>

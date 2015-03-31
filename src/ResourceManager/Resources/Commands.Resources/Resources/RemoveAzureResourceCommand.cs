@@ -12,12 +12,12 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using System.Management.Automation;
-using Microsoft.Azure.Commands.Resources.Models;
-using ProjectResources = Microsoft.Azure.Commands.Resources.Properties.Resources;
-
 namespace Microsoft.Azure.Commands.Resources
 {
+    using System.Management.Automation;
+    using Microsoft.Azure.Commands.Resources.Models;
+    using ProjectResources = Microsoft.Azure.Commands.Resources.Properties.Resources;
+
     /// <summary>
     /// Deletes an existing resource.
     /// </summary>
