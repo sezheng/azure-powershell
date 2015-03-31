@@ -288,4 +288,7 @@
   <data name="ManagementLockNameIsUnknown" xml:space="preserve">
     <value>The management lock name is unknown.</value>
   </data>
+  <data name="ParentResourceIsDeprecated" xml:space="preserve">
+    <value>The parent resource parameter is deprecated. Please choice one of the following options: 1)ResourceId:fully qualified resource id.2) ResourceType: &lt;ResourceProviderName&gt;/&lt;ParentResourceType&gt;/&lt;ChildResourceType&gt; and ResourceName:&lt;ParentResourceName&gt;/&lt;ChildResourceName&gt;.</value>
+  </data>
 </root>

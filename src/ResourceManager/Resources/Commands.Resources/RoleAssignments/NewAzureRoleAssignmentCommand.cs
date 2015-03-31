@@ -12,15 +12,15 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using Microsoft.Azure.Commands.Resources.Models;
-using Microsoft.Azure.Commands.Resources.Models.ActiveDirectory;
-using Microsoft.Azure.Commands.Resources.Models.Authorization;
-using System;
-using System.Management.Automation;
-using Microsoft.Azure.Management.Resources.Models;
-
 namespace Microsoft.Azure.Commands.Resources
 {
+    using Microsoft.Azure.Commands.Resources.Models;
+    using Microsoft.Azure.Commands.Resources.Models.ActiveDirectory;
+    using Microsoft.Azure.Commands.Resources.Models.Authorization;
+    using System;
+    using System.Management.Automation;
+    using ProjectResources = Microsoft.Azure.Commands.Resources.Properties.Resources;
+
     /// <summary>
     /// Creates new role assignment.
     /// </summary>
@@ -155,6 +155,10 @@ namespace Microsoft.Azure.Commands.Resources
 
         public override void ExecuteCmdlet()
         {
+            if (!string.IsNullOrEmpty(ParentResource))
+            {
+                WriteWarning(ProjectResources.ParentResourceIsDeprecated);
+            }
             FilterRoleAssignmentsOptions parameters = new FilterRoleAssignmentsOptions()
             {
                 Scope = Scope,

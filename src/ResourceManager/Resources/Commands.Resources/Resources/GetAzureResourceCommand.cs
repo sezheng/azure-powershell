@@ -17,6 +17,7 @@ using Microsoft.Azure.Commands.Resources.Models;
 using System.Collections;
 using System.Collections.Generic;
 using System.Management.Automation;
+using ProjectResources = Microsoft.Azure.Commands.Resources.Properties.Resources;
 
 namespace Microsoft.Azure.Commands.Resources
 {
@@ -63,6 +64,11 @@ namespace Microsoft.Azure.Commands.Resources
 
         public override void ExecuteCmdlet()
         {
+            if(!string.IsNullOrEmpty(ParentResource))
+            {
+                WriteWarning(ProjectResources.ParentResourceIsDeprecated);
+            }
+
             BasePSResourceParameters parameters = new BasePSResourceParameters()
             {
                 Name = Name,

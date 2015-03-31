@@ -286,6 +286,15 @@ namespace Microsoft.Azure.Commands.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The parent resource parameter is deprecated. Please choice one of the following options: 1)ResourceId:fully qualified resource id.2) ResourceType: &lt;ResourceProviderName&gt;/&lt;ParentResourceType&gt;/&lt;ChildResourceType&gt; and ResourceName:&lt;ParentResourceName&gt;/&lt;ChildResourceName&gt;..
+        /// </summary>
+        internal static string ParentResourceIsDeprecated {
+            get {
+                return ResourceManager.GetString("ParentResourceIsDeprecated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find a registered feature named &apos;{0}&apos; for the resource provider &apos;{1}&apos;..
         /// </summary>
         internal static string RegisteredFeatureNotFound {

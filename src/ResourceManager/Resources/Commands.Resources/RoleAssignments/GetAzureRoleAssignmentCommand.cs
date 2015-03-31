@@ -18,6 +18,7 @@ using Microsoft.Azure.Commands.Resources.Models.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Management.Automation;
+using ProjectResources = Microsoft.Azure.Commands.Resources.Properties.Resources;
 
 namespace Microsoft.Azure.Commands.Resources
 {
@@ -216,6 +217,10 @@ namespace Microsoft.Azure.Commands.Resources
 
         public override void ExecuteCmdlet()
         {
+            if (!string.IsNullOrEmpty(ParentResource))
+            {
+                WriteWarning(ProjectResources.ParentResourceIsDeprecated);
+            }
             FilterRoleAssignmentsOptions options = new FilterRoleAssignmentsOptions()
             {
                 Scope = Scope,
@@ -240,6 +245,5 @@ namespace Microsoft.Azure.Commands.Resources
 
             WriteObject(PoliciesClient.FilterRoleAssignments(options), true);
         }
-
     }
 }

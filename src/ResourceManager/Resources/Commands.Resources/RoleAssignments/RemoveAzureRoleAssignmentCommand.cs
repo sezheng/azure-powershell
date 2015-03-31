@@ -162,6 +162,10 @@ namespace Microsoft.Azure.Commands.Resources
 
         public override void ExecuteCmdlet()
         {
+            if (!string.IsNullOrEmpty(ParentResource))
+            {
+                WriteWarning(ProjectResources.ParentResourceIsDeprecated);
+            }
             PSRoleAssignment roleAssignment = null;
             FilterRoleAssignmentsOptions options = new FilterRoleAssignmentsOptions()
             {

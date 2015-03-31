@@ -126,11 +126,12 @@ namespace Microsoft.Azure.Commands.Resources.Models
 
             ResourceGetResult getResource;
 
-            if(!String.IsNullOrEmpty(parameters.Id))
+            if (!string.IsNullOrEmpty(parameters.Id))
+            {
                 parameters.ResourceGroupName = ResourceIdentifier.GetResourceGroupName(parameters.Id);
+            }
             
-            getResource = ResourceManagementClient.Resources.Get(parameters.ResourceGroupName,
-                                                                        resourceIdentity);
+            getResource = ResourceManagementClient.Resources.Get(parameters.ResourceGroupName,resourceIdentity);
             if (getResource == null)
             {
                 throw new Exception();
@@ -141,7 +142,8 @@ namespace Microsoft.Azure.Commands.Resources.Models
             Dictionary<string, string> tagDictionary = TagsConversionHelper.CreateTagDictionary(parameters.Tag, validate: true);
 
             ResourceManagementClient.Resources.CreateOrUpdate(
-                parameters.ResourceGroupName, resourceIdentity,
+                parameters.ResourceGroupName, 
+                resourceIdentity,
                 new GenericResource
                 {
                     Location = getResource.Resource.Location,

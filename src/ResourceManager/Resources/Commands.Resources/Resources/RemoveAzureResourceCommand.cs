@@ -36,6 +36,11 @@ namespace Microsoft.Azure.Commands.Resources
 
         public override void ExecuteCmdlet()
         {
+            if (!string.IsNullOrEmpty(ParentResource))
+            {
+                WriteWarning(ProjectResources.ParentResourceIsDeprecated);
+            }
+
             BasePSResourceParameters parameters = new BasePSResourceParameters()
             {
                 Name = Name,
