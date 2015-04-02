@@ -75,5 +75,19 @@ namespace Microsoft.Azure.Commands.Resources.Test.ScenarioTests
         {
             ResourcesController.NewInstance.RunPsTest("Test-GetResourcesViaPipingFromAnotherResource");
         }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestInvokeResourceActionList()
+        {
+            ResourcesController.NewInstance.RunPsTest("Test-InvokeResourceActionList");
+        }
+
+        [Fact]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        public void TestInvokeResourceActionStop()
+        {
+            ResourcesController.NewInstance.RunPsTest("Test-InvokeResourceActionStopWebsite");
+        }
     }
 }

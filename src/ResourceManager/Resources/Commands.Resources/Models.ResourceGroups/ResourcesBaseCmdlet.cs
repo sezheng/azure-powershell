@@ -12,14 +12,17 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using System.IO;
-using Microsoft.Azure.Common.Authentication;
-using Microsoft.Azure.Common.Authentication.Models;
-
 namespace Microsoft.Azure.Commands.Resources.Models
 {
     using Microsoft.Azure.Commands.Resources.Models.Authorization;
     using Microsoft.WindowsAzure.Commands.Utilities.Common;
+    using System.IO;
+    using Microsoft.Azure.Common.Authentication;
+    using Microsoft.Azure.Common.Authentication.Models;
+    using Microsoft.Azure.Commands.Websites;
+    using Microsoft.Azure.Management.WebSites;
+    using System;
+    using Microsoft.WindowsAzure.Commands.Utilities.Websites;
 
     /// <summary> 
     /// Base class for all resources cmdlets
@@ -40,6 +43,22 @@ namespace Microsoft.Azure.Commands.Resources.Models
         /// Field that holds the policies client instance
         /// </summary>
         private AuthorizationClient policiesClient;
+
+        private IWebsitesClient websitesClient;
+
+        public IWebsitesClient WebsitesClient
+        {
+            get
+            {
+                if (websitesClient == null)
+                {
+                    websitesClient = new WebsitesClient(Profile, Profile.Context.Subscription, WriteDebug);
+                }
+                return websitesClient;
+            }
+
+            set { websitesClient = value; }
+        }
 
         /// <summary>
         /// Gets or sets the resources client

@@ -12,13 +12,6 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.Serialization.Formatters;
-using System.Threading;
 using Hyak.Common;
 using Microsoft.Azure.Commands.Resources.Models.Authorization;
 using Microsoft.Azure.Common.Authentication;
@@ -29,7 +22,15 @@ using Microsoft.Azure.Management.Resources;
 using Microsoft.Azure.Management.Resources.Models;
 using Microsoft.WindowsAzure.Commands.Common;
 using Microsoft.WindowsAzure.Commands.Utilities.Common;
+using Microsoft.WindowsAzure.Commands.Utilities.Websites;
 using Newtonsoft.Json;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.Serialization.Formatters;
+using System.Threading;
 using ProjectResources = Microsoft.Azure.Commands.Resources.Properties.Resources;
 
 namespace Microsoft.Azure.Commands.Resources.Models
@@ -52,6 +53,8 @@ namespace Microsoft.Azure.Commands.Resources.Models
 
         public GalleryTemplatesClient GalleryTemplatesClient { get; set; }
 
+        //public IWebSiteManagementClient WebsitesManagementClient { get; set; }
+
         // TODO: http://vstfrd:8080/Azure/RD/_workitems#_a=edit&id=3247094
         //public IEventsClient EventsClient { get; set; }
 
@@ -60,7 +63,7 @@ namespace Microsoft.Azure.Commands.Resources.Models
         public Action<string> ErrorLogger { get; set; }
 
         public Action<string> WarningLogger { get; set; }
-
+                
         /// <summary>
         /// Creates new ResourceManagementClient
         /// </summary>
@@ -71,7 +74,8 @@ namespace Microsoft.Azure.Commands.Resources.Models
                 new GalleryTemplatesClient(profile.Context),
                 // TODO: http://vstfrd:8080/Azure/RD/_workitems#_a=edit&id=3247094
                 //AzureSession.ClientFactory.CreateClient<EventsClient>(context, AzureEnvironment.Endpoint.ResourceManager),
-                AzureSession.ClientFactory.CreateClient<AuthorizationManagementClient>(profile.Context, AzureEnvironment.Endpoint.ResourceManager))
+                AzureSession.ClientFactory.CreateClient<AuthorizationManagementClient>(profile, AzureEnvironment.Endpoint.ResourceManager))
+          //      AzureSession.ClientFactory.CreateClient<WebSiteManagementClient>(profile, AzureEnvironment.Endpoint.ResourceManager))
         {
 
         }
@@ -81,19 +85,22 @@ namespace Microsoft.Azure.Commands.Resources.Models
         /// </summary>
         /// <param name="resourceManagementClient">The IResourceManagementClient instance</param>
         /// <param name="galleryTemplatesClient">The IGalleryClient instance</param>
-        /// <param name="authorizationManagementClient">The management client instance</param>
+        /// <param name="authorizationManagementClient">The IAuthorizationManagementClient instance</param>
+        /// <param name="websitesManagementClient">The IWebsitesClient instance</param>
         public ResourcesClient(
             IResourceManagementClient resourceManagementClient,
-            GalleryTemplatesClient galleryTemplatesClient,
+            GalleryTemplatesClient galleryTemplatesClient,            
             // TODO: http://vstfrd:8080/Azure/RD/_workitems#_a=edit&id=3247094
             //IEventsClient eventsClient,
             IAuthorizationManagementClient authorizationManagementClient)
+           // IWebSiteManagementClient websitesManagementClient)
         {
-            GalleryTemplatesClient = galleryTemplatesClient;
+            this.ResourceManagementClient = resourceManagementClient;
+            this.GalleryTemplatesClient = galleryTemplatesClient;
             // TODO: http://vstfrd:8080/Azure/RD/_workitems#_a=edit&id=3247094
             //EventsClient = eventsClient;
-            AuthorizationManagementClient = authorizationManagementClient;
-            this.ResourceManagementClient = resourceManagementClient;
+            this.AuthorizationManagementClient = authorizationManagementClient;
+        //    this.WebsitesManagementClient = websitesManagementClient;
         }
 
         /// <summary>

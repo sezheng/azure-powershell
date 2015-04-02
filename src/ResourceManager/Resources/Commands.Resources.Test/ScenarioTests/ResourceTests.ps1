@@ -215,3 +215,59 @@ function Test-GetResourcesViaPipingFromAnotherResource
 	# Assert
 	Assert-AreEqual 2 @($list).Count
 }
+
+<#
+.SYNOPSIS
+Tests get resources via piping from resource group
+#>
+function Test-InvokeResourceActionStopWebsite
+{
+	# Setup
+	$rgname = Get-ResourceGroupName
+	$rnameParent = Get-ResourceName
+	$rnameChild = Get-ResourceName
+	$resourceTypeParent = "Microsoft.Web/sites"
+	$resourceTypeChild = "Microsoft.Web/sites/instances"
+	$rglocation = Get-ProviderLocation ResourceManagement
+	$location = Get-ProviderLocation $resourceTypeParent
+	$apiversion = "2014-04-01"
+
+	# Test
+	New-AzureResourceGroup -Name $rgname -Location $rglocation
+	New-AzureResource -Name $rnameParent -Location $location -ResourceGroupName $rgname -ResourceType $resourceTypeParent -PropertyObject @{"name" = "mysite1"} -ApiVersion $apiversion		
+	New-AzureResource -Name $rnameChild -Location $location -ResourceGroupName $rgname -ResourceType $resourceTypeChild -ParentResource servers/$rnameParent -PropertyObject @{"name" = "myinstance1"} -ApiVersion $apiversion
+		
+	Invoke-AzureResourceAction -ResourceGroupName $rgname -ResourceType $resourceTypeParent -ResourceName $rnameParent -ActionName Stop -ApiVersion $apiversion
+	Invoke-AzureResourceAction -ResourceGroupName $rgname -ResourceType $resourceTypeChild -ResourceName $rnameChild -ActionName Stop -ApiVersion $apiversion
+		
+	
+}
+
+<#
+.SYNOPSIS
+Tests get resources via piping from resource group
+#>
+function Test-InvokeResourceActionList
+{
+	# Setup
+	$rgname = Get-ResourceGroupName
+	$rnameParent = Get-ResourceName
+	$rnameChild = Get-ResourceName
+	$resourceTypeParent = "Microsoft.Web/sites"
+	$resourceTypeChild = "Microsoft.Web/sites/instances"
+	$rglocation = Get-ProviderLocation ResourceManagement
+	$location = Get-ProviderLocation $resourceTypeParent
+	$apiversion = "2015-01-01"
+
+	# Test
+	New-AzureResourceGroup -Name $rgname -Location $rglocation
+	New-AzureResource -Name $rnameParent -Location $location -ResourceGroupName $rgname -ResourceType $resourceTypeParent -PropertyObject @{"name" = "mysite1"} -ApiVersion $apiversion		
+	New-AzureResource -Name $rnameChild -Location $location -ResourceGroupName $rgname -ResourceType $resourceTypeChild -ParentResource servers/$rnameParent -PropertyObject @{"name" = "myinstance1"} -ApiVersion $apiversion
+		
+	Invoke-AzureResourceAction -ResourceGroupName $rgname -ResourceType $resourceTypeParent -ResourceName $rnameParent -ActionName list -ApiVersion $apiversion
+	Invoke-AzureResourceAction -ResourceGroupName $rgname -ResourceType $resourceTypeChild -ResourceName $rnameChild -ActionName List -ApiVersion $apiversion
+		
+	
+}
+
+

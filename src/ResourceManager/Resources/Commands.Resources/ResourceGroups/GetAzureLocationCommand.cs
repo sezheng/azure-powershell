@@ -26,7 +26,14 @@ namespace Microsoft.Azure.Commands.Resources
     {
         public override void ExecuteCmdlet()
         {
-            WriteObject(ResourcesClient.GetLocations(), true);
+            List<PSResourceProviderLocationInfo> locationList = ResourcesClient.GetLocations();
+            List<PSObject> output = new List<PSObject>();
+            locationList.ForEach(r => output.Add(base.ConstructPSObject(
+                null,
+                "Name", r.Name,
+                "Locations", r.LocationsString)));
+
+            WriteObject(output, true);
         }
     }
 }

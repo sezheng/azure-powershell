@@ -18,26 +18,17 @@ using System.Text;
         /// </summary>
         /// <param name="strings">The strings.</param>
         /// <param name="separator">The separator.</param>
-        public static string ConcatStrings(IEnumerable<string> strings, string separator = "")
+        public static string GetLast(string source)
         {
-            return string.Join(separator, strings);
+            string[] tokens = StringExtensions.GetTokens(source);
+            int length = tokens.Length;
+            return tokens[length - 1];
         }
         public static string[] SplitRemoveEmpty(string source, params char[] separator)
         {
             return source.Split(separator, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public static int Find(string[] tokens, string target)
-        {
-            int length = tokens.Length;
-            int index = -1;
-            for (int i = 0; i < length; i++)
-            {
-                if (target == tokens.GetValue(i).ToString())
-                    index = i;
-            }
-            return index;
-        }
         public static string[] GetTokens(string source)
         {
             return StringExtensions.SplitRemoveEmpty(source, '/');
